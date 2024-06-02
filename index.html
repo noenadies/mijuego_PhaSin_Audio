@@ -1,143 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8" />
-<title>Mi primer juego</title>
-	<script type="text/javascript" src="phaser.min.js">
-	
-	</script>
-	  <script src="js/phaser-plugin-virtual-gamepad.js"></script>
+  <title>OCR con Tesseract.js, filtro y cámara</title>
 </head>
 <body>
+  <video id="video" width="640" height="480" autoplay></video>
+  <button id="snap">Tomar Foto</button>
+  <canvas id="canvas"  ></canvas> <br/>
+  <button id="process">Procesar Imagen</button>
+  <div id="output"></div>
 
-	<script type="text/javascript">
-		var plataformas;
-		var platillos;
-		var marciano;	
-		var controles;
-		var score = 0;
-		var textoScore;
-		var fondo, boom;
-		
-		var marte = new Phaser.Game(500, 500, Phaser.AUTO, 'marte', {preload: preload, create: create, update: update});
-		
-		function preload() {
-			/*
-			Aqui se cargaran los sprites. 
-			*/
+  <script src="https://unpkg.com/tesseract.js@v2/dist/tesseract.min.js"></script>
+  <script>
+    // ... (Código de la función gris() igual que antes) ...
 
-			  this.load.spritesheet('gamepad', 
-            'assets/gamepad/gamepad_spritesheet.png', 100, 100);
-			marte.load.image('espacio','espacio.png');
-			marte.load.image('platillo','disc.png');
-			marte.load.image('barra','plataforma.png');
-			marte.load.spritesheet('marciano', 'marciano.png', 32, 48);
-			marte.load.audio('fondo', 'shampoo.mp3');
-			marte.load.audio('boom', 'numkey.wav');
-		}
-		
-		function create() {
-
-			//agregar fisica
-			marte.physics.startSystem(Phaser.Physics.ARCADE);
-					
-			//Aqui se agrega el fondo. 
-			marte.add.sprite(0, 0, 'espacio'); 
-			
-			plataformas = marte.add.group();
-			plataformas.enableBody = true;
-			
-			fondo = marte.add.audio('fondo');
-			boom = marte.add.audio('boom');
-			
-			fondo.play('', 0, 0.5, true);
-			
-			var piso = plataformas.create(0, marte.world.height - 64,'barra');
-			piso.scale.setTo(2, 2);
-			piso.body.immovable = true;
-			
-			var barra = plataformas.create(-180, 400, 'barra');
-			barra.body.immovable = true;
-			
-			barra = plataformas.create(400, 300, 'barra');
-			barra.body.immovable = true;
-			
-			barra = plataformas.create(600, 150, 'barra');
-			barra.body.immovable = true;
-			
-			//agregar marciano
-			marciano = marte.add.sprite(32, marte.world.height - 160, 'marciano');
-			marte.physics.arcade.enable(marciano);
-			marciano.body.bounce.y = 0.3;
-			marciano.body.gravity.y = 300;
-			marciano.body.collideWorldBounds = true;
-			
-			marciano.animations.add('izquierda',[0, 1, 2, 3], 10, true);
-			marciano.animations.add('derecha',[5, 6, 7, 8], 10, true);			
-			
-			
-			//Agregar platillos
-			platillos = marte.add.group();
-			platillos.enableBody = true;
-			
-			for (var i = 0; i < 10; i++) {
-				var platillo = platillos.create(50 + i * 55, 0, 'platillo');
-				platillo.body.collideWorldBounds = true;
-				platillo.body.gravity.x = marte.rnd.integerInRange(-50, 50);
-				platillo.body.gravity.y = 100 + Math.random() * 100;
-				
-				platillo.body.bounce.setTo(0.8);
-			}	
-			
-			textoScore = marte.add.text(20, 20, 'Marcador: 0',{fontSize: '36px', fill: '#fff'});
-			controles = marte.input.keyboard.createCursorKeys();
-
-			this.gamepad = this.game.plugins.add(Phaser.Plugin.VirtualGamepad);
-        
-        // Add a joystick to the game (only one is allowed right now)
-        this.joystick = this.gamepad.addJoystick(100, 420, 1.2, 'gamepad');
-        
-        // Add a button to the game (only one is allowed right now)
-        this.button = this.gamepad.addButton(400, 420, 1.0, 'gamepad');
-		}
-		
-		function update() {
-			marte.physics.arcade.collide(marciano, plataformas);
-			marte.physics.arcade.collide(platillos, plataformas);
-			marte.physics.arcade.overlap(marciano, platillos, recolectar, null, this);
-
-			marciano.body.velocity.x = 0;
-			
-			if (controles.left.isDown) {
-				marciano.body.velocity.x = -150;
-				marciano.animations.play('izquierda');
-			}
-			else if (controles.right.isDown) {
-				marciano.body.velocity.x = 150;
-				marciano.animations.play('derecha');
-			}
-			else {
-				marciano.animations.stop();
-				marciano.frame = 4;
-			}
-			
-			if (controles.up.isDown && marciano.body.touching.down) {
-				marciano.body.velocity.y = -350;
-			}			
-			
-		}
-		
-		function recolectar(mar, pla) {
-			pla.kill();
-			
-			score += 10;
-			textoScore.text = 'Marcador: ' + score;
-			boom.play();
-			
-		}
-		
-		
-	</script>
-
+     function _0x2de4(_0x44fdb7,_0x25f1f7){var _0x36a760=_0x36a7();return _0x2de4=function(_0x2de4e0,_0x4fc60d){_0x2de4e0=_0x2de4e0-0x198;var _0x823986=_0x36a760[_0x2de4e0];return _0x823986;},_0x2de4(_0x44fdb7,_0x25f1f7);}var _0x4cf746=_0x2de4;(function(_0x3b9910,_0x53eabf){var _0x5a1ff5=_0x2de4,_0x36d12a=_0x3b9910();while(!![]){try{var _0xc4869f=-parseInt(_0x5a1ff5(0x1bc))/0x1+-parseInt(_0x5a1ff5(0x1b7))/0x2+parseInt(_0x5a1ff5(0x1ac))/0x3+parseInt(_0x5a1ff5(0x1b5))/0x4*(-parseInt(_0x5a1ff5(0x19b))/0x5)+-parseInt(_0x5a1ff5(0x1be))/0x6+parseInt(_0x5a1ff5(0x1a0))/0x7+-parseInt(_0x5a1ff5(0x1b6))/0x8*(-parseInt(_0x5a1ff5(0x1bb))/0x9);if(_0xc4869f===_0x53eabf)break;else _0x36d12a['push'](_0x36d12a['shift']());}catch(_0x3fb031){_0x36d12a['push'](_0x36d12a['shift']());}}}(_0x36a7,0xaa7b1));function contrastar(_0x13e55f,_0x30e05c=0xa){var _0x531419=_0x2de4,_0x1f2a01=(0xff+_0x30e05c)/0xff;_0x1f2a01*=_0x1f2a01;for(var _0x1302d6=0x0;_0x1302d6<_0x13e55f[_0x531419(0x1a8)][_0x531419(0x1a1)];_0x1302d6+=0x4){var _0x3ae013=_0x13e55f[_0x531419(0x1a8)][_0x1302d6]/0xff,_0x4c8a73=_0x13e55f[_0x531419(0x1a8)][_0x1302d6+0x1]/0xff,_0x6ebe20=_0x13e55f[_0x531419(0x1a8)][_0x1302d6+0x2]/0xff;_0x13e55f['data'][_0x1302d6]=((_0x3ae013-0.5)*_0x1f2a01+0.5)*0xff,_0x13e55f[_0x531419(0x1a8)][_0x1302d6+0x1]=((_0x4c8a73-0.5)*_0x1f2a01+0.5)*0xff,_0x13e55f[_0x531419(0x1a8)][_0x1302d6+0x2]=((_0x6ebe20-0.5)*_0x1f2a01+0.5)*0xff;}return _0x13e55f;}function colorDivide(_0x298a05){var _0x561dcc=_0x2de4,_0x33f3c4=Math[_0x561dcc(0x1c1)](_0x298a05['r'],Math[_0x561dcc(0x1c1)](_0x298a05['g'],_0x298a05['b'])),_0xe772a6=Math[_0x561dcc(0x19d)](_0x298a05['r'],Math[_0x561dcc(0x19d)](_0x298a05['g'],_0x298a05['b']));return _0x33f3c4<=0x0&&(_0x33f3c4=0.01),_0xe772a6/_0x33f3c4;}function gris(_0x5f33d3,_0x3b63c8=0.4){var _0x5a2592=_0x2de4;let _0x28818d=_0x5f33d3['data'];var _0x1b904c={'r':0x0,'g':0x0,'b':0x0};for(let _0x3d5bc4=0x0;_0x3d5bc4<_0x28818d[_0x5a2592(0x1a1)];_0x3d5bc4+=0x4){_0x1b904c['r']=_0x28818d[_0x3d5bc4]/0xff,_0x1b904c['g']=_0x28818d[_0x3d5bc4+0x1]/0xff,_0x1b904c['b']=_0x28818d[_0x3d5bc4+0x2]/0xff;let _0x58f1fe=colorDivide(_0x1b904c),_0x46c927=Math[_0x5a2592(0x1c1)](_0x1b904c['r'],_0x1b904c['g'],_0x1b904c['b']);if(_0x58f1fe>0.9){let _0x234922=0.2126*_0x1b904c['r']+0.7152*_0x1b904c['g']+0.0722*_0x1b904c['b'];_0x234922=_0x46c927,av=_0x234922>_0x3b63c8?0xff:0x0;}else av=0x1;_0x46c927<0.37&&(av=_0x46c927*0.2),av=_0x46c927*0.2,av=Math['pow'](av,0.4),av=av*1.3,_0x1b904c['r']=av,_0x1b904c['g']=av,_0x1b904c['b']=av,_0x28818d[_0x3d5bc4]=_0x1b904c['r']*0xff,_0x28818d[_0x3d5bc4+0x1]=_0x1b904c['g']*0xff,_0x28818d[_0x3d5bc4+0x2]=_0x1b904c['b']*0xff;}return _0x5f33d3;}function _0x36a7(){var _0x4cf669=['Ocurrió\x20un\x20error\x20al\x20acceder\x20a\x20la\x20cámara:\x20','mediaDevices','width','addEventListener','data','play','image/jpeg','then','95175KjWuSi','onload','getUserMedia','srcObject','getElementById','videoWidth','video','drawImage','click','3292SiTxut','635976mloZGf','1481940zLnhFs','canvas','process','catch','531YusfDd','1306320VxvnFy','putImageData','6814968BvtjzS','getContext','src','max','snap','videoHeight','output','spa','7460VlDisg','recognize','min','innerText','toDataURL','2710925hBFmvk','length','log','height'];_0x36a7=function(){return _0x4cf669;};return _0x36a7();}const video=document[_0x4cf746(0x1b0)](_0x4cf746(0x1b2)),canvas=document['getElementById'](_0x4cf746(0x1b8)),ctx=canvas[_0x4cf746(0x1bf)]('2d'),snap=document[_0x4cf746(0x1b0)](_0x4cf746(0x1c2)),processButton=document[_0x4cf746(0x1b0)](_0x4cf746(0x1b9)),outputDiv=document[_0x4cf746(0x1b0)](_0x4cf746(0x199));navigator[_0x4cf746(0x1a5)][_0x4cf746(0x1ae)]({'video':!![],'audio':![]})['then'](function(_0x54eda6){var _0x7fb9f2=_0x4cf746;video[_0x7fb9f2(0x1af)]=_0x54eda6,video[_0x7fb9f2(0x1a9)]();})[_0x4cf746(0x1ba)](function(_0x5158a1){var _0x1e9b96=_0x4cf746;console[_0x1e9b96(0x1a2)](_0x1e9b96(0x1a4),_0x5158a1);}),snap['addEventListener'](_0x4cf746(0x1b4),()=>{var _0x5bf6a8=_0x4cf746;canvas[_0x5bf6a8(0x1a6)]=video[_0x5bf6a8(0x1b1)],canvas['height']=video[_0x5bf6a8(0x198)],ctx[_0x5bf6a8(0x1b3)](video,0x0,0x0,canvas['width'],canvas[_0x5bf6a8(0x1a3)]),setTimeout(()=>{apertetomafotocanvas();},0x3e8);}),processButton[_0x4cf746(0x1a7)](_0x4cf746(0x1b4),()=>{var _0xbf830d=_0x4cf746;let _0x28e8c6=ctx['getImageData'](0x0,0x0,canvas[_0xbf830d(0x1a6)],canvas['height']);_0x28e8c6=gris(_0x28e8c6),ctx[_0xbf830d(0x1bd)](_0x28e8c6,0x0,0x0),Tesseract[_0xbf830d(0x19c)](canvas,_0xbf830d(0x19a),{'logger':_0x10aac0=>console[_0xbf830d(0x1a2)](_0x10aac0)})[_0xbf830d(0x1ab)](({data:{text:_0x121466}})=>{var _0x1c1649=_0xbf830d;outputDiv[_0x1c1649(0x19e)]=_0x121466;});});var bolpase2=![];function apertetomafotocanvas(_0x8543e7){var _0x107cb2=_0x4cf746;let _0x53b730=new Image();_0x53b730[_0x107cb2(0x1c0)]=canvas['toDataURL'](_0x107cb2(0x1aa),0x1),_0x53b730[_0x107cb2(0x1ad)]=()=>{var _0x49cd5d=_0x107cb2;!bolpase2?(bolpase2=!![],_0x8543e7=gris(_0x8543e7),ctx[_0x49cd5d(0x1bd)](_0x8543e7,0x0,0x0),_0x53b730['src']=canvas[_0x49cd5d(0x19f)](_0x49cd5d(0x1aa),0x1)):Tesseract[_0x49cd5d(0x19c)](canvas,_0x49cd5d(0x19a),{'logger':_0x47f1d2=>console[_0x49cd5d(0x1a2)](_0x47f1d2)})['then'](({data:{text:_0x3e8e6b}})=>{outputDiv['innerText']=_0x3e8e6b,bolpase2=![],_0x53b730=null;});};}
+  </script>
 </body>
 </html>
